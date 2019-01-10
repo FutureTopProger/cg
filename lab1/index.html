@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+	<body bgcolor="#FA8072">
+		<canvas id="csl" width="600" height="600">
+			Your browser does not support the HTML5 canvas tag.
+		</canvas>
+		<h3> Введите параметры для уравнения -a < A <= x <= B < a <h3>
+		<h4> y^2 = x^2 * (a - x)/(a + x) <h4>
+		<form>
+		   a : <input name="first"  type="number" value="3">
+		   A : <input name="second" type="number" value="-3">
+		   B : <input name="last"   type="number" value="3">
+		   <input name="go" type="button" onClick="validate(this.form);" value="Построить">
+		</form>
+		<script>
+
+			function Scale(a) {
+				return Math.floor((300-5) / a)
+			}
+
+			function f(a, A, B, scale) {
+				lines=[]
+				x=.0
+				i=0
+
+				for (x = A + 0.01; x < B + 0.0001; x += 0.01) {
+					y = x * Math.sqrt( (a - x)/(a + x) )
+					p = [x * scale,-y * scale]
+					lines[i++] = p
+				}
+				for (x = x - 0.01; x < B; x += 0.0001) {
+					y = x * Math.sqrt( (a - x)/(a + x) )
+					p = [x * scale,-y * scale]
+					lines[i++] = p
+				}
+				return lines
+			}
+
+
+			function validate(form) {
+				var elems = form.elements;
+				if (!elems.first.value) {
+					alert("Введите параметр a");
+				} else
+				if (!elems.second.value) {
+					alert("Введите параметр A");
+				} else
+				if (!elems.last.value) {
+					alert("Введите параметр B");
+				} else 
+				if (-(elems.first.value) > (elems.second.value) || (elems.second.value) >= (elems.last.value) || (elems.last.value) > (elems.first.value)){
+					alert("Некоректные параметры A или B");
+				} else {
+					a = Number(elems.first.value)
+					A = Number(elems.second.value)
+					B = Number(elems.last.value)
+					scale = Scale(a)
+					lines = f(a, A, B, scale)
+
+					var cnt1 = document.getElementById("csl").getContext("2d");
+					
+					with (cnt1){
+						clearRect(0,0,600,600);
+
+						beginPath()
+						moveTo(300, 0  );
+						lineTo(300, 600);
+						moveTo(0  , 300);
+						lineTo(600, 300);
+						stroke();
+
+						moveTo(lines[0][0] + 300, lines[0][1] + 300)
+				
+						for (var i=0; i < lines.length; i++){ // 
+						  lineTo(lines[i][0] + 300, lines[i][1] + 300); stroke()
+						}
+						
+						moveTo(lines[0][0] + 300, -lines[0][1] + 300)
+						for (var i=0; i < lines.length; i++){ // 
+						  lineTo(lines[i][0] + 300, -lines[i][1] + 300); stroke()
+						}	
+					}
+				}
+			}
+		</script> 
+	</body>
+</html>
+
+
+	
